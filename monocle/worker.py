@@ -939,9 +939,6 @@ class Worker:
             if map_objects.status != 1:
                 error = 'GetMapObjects code for {}. Speed: {:.2f}'.format(self.username, self.speed)
                 self.empty_visits += 1
-                if self.empty_visits > 3:
-                    reason = '{} empty visits'.format(self.empty_visits)
-                    await self.swap_account(reason)
                 raise ex.UnexpectedResponseException(error)
         except KeyError:
             await self.random_sleep(.5, 1)
@@ -1186,7 +1183,7 @@ class Worker:
                 self.error_code = '0 SEEN'
             else:
                 self.error_code = ','
-            if self.empty_visits > 3 and not bootstrap:
+            if self.empty_visits < -3 and not bootstrap:
                 reason = '{} empty visits'.format(self.empty_visits)
                 await self.swap_account(reason)
         self.visits += 1
